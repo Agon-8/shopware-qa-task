@@ -151,6 +151,18 @@ Cash on delivery, and order number 11040 displayed quantity 2.
 | 3   | Complete the guest checkout      | Order placed, confirmation page shown                                        |
 
 **Expected result:** the listing buy button produces the same cart state as the detail page.
+**Actual Result:**  
+Demo Produkt was added directly from the Clothing product listing without
+opening the product detail page. The off-canvas cart displayed quantity 1
+and a total of €10.00. The guest checkout was completed successfully using
+Cash on delivery.
+
+**Status:** Passed
+
+**Evidence:**
+
+- `screenshots/positive/TC-P05-quick-add-cart.png`
+- `screenshots/positive/TC-P05-order-confirmation.png`
 
 ---
 
