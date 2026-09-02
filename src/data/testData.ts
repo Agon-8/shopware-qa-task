@@ -34,9 +34,9 @@ export function buildGuest(
   const stamp = Date.now();
   return {
     salutation: "Not specified",
-    firstName: "Ammar",
-    lastName: "QaTest",
-    email: `qa.guest.${stamp}@example.com`,
+    firstName: "John",
+    lastName: "Born",
+    email: `john.b.${stamp}@example.com`,
     street: "Rruga B 12",
     zipcode: "10000",
     city: "Prishtina",
