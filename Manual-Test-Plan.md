@@ -181,6 +181,15 @@ Cash on delivery.
 | 2   | Navigate directly to /checkout/confirm | Redirected back to the cart, no order is created          |
 
 **Expected result:** an order can never be placed without line items.
+**Actual Result:**  
+The cart was empty and the storefront displayed an empty-cart message.
+Checkout was not available, so the user could not continue without a product.
+
+**Status:** Passed
+
+**Evidence:**
+
+- `screenshots/negative/TC-N01-empty-cart.png`
 
 ---
 
