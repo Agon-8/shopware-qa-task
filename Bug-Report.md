@@ -4,6 +4,9 @@
 
 > **Reporting note:** This is a simulated issue, which the assignment explicitly permits. It demonstrates the expected bug-report format and must not be presented as a verified defect unless the behaviour is reproduced on the demo store.
 
+This is a simulated issue, as permitted by the assignment.
+No screenshot is attached.
+
 ### Environment
 
 | Item | Value |
