@@ -68,6 +68,16 @@ displayed on the confirmation page.
 | 3   | Complete the guest checkout as in TC-P01      | Order confirmation page with an order number |
 
 **Expected result:** the entry point does not change the checkout outcome.
+**Actual Result:**  
+Demo Produkt was found successfully through search. The guest checkout was
+completed using Cash on delivery, and order number 11029 was displayed.
+
+**Status:** Passed
+
+**Evidence:**
+
+- `screenshots/positive/TC-P02-search-results.png`
+- `screenshots/positive/TC-P02-order-confirmation.png`
 
 ---
 
