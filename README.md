@@ -1,32 +1,32 @@
-# Shopware 6 Storefront — QA Exercise
+# Shopware 6 Storefront - QA Exercise
 
-Manual test plan, bug report and Playwright end-to-end automation for the guest checkout flow of a Shopware 6 storefront, built with the Page Object Model.
+This repository contains the manual test plan, bug report, test evidence, and Playwright end-to-end automation for the guest checkout flow of a Shopware 6 storefront.
 
-**Flow under test:** guest visitor opens the store, finds a product, adds it to the cart, checks out as a guest, selects Cash on delivery (Nachnahme) and places the order.
+**Flow under test:** A guest visitor finds a product, adds it to the cart, completes checkout using Cash on delivery, and receives an order confirmation number.
 
 ## Environment
 
-| Item | Value |
-| --- | --- |
-| Target | https://www.shopware6-demo.development-s25.com/ |
-| Storefront language | German (de-DE) |
-| Framework | Playwright + TypeScript |
-| Automated browser | Chromium |
-| Manual testing | Google Chrome on Windows |
+| Item              | Value                                                         |
+| ----------------- | ------------------------------------------------------------- |
+| Target            | https://www.shopware6-demo.development-s25.com/               |
+| Automation locale | German (de-DE)                                                |
+| Manual testing    | Google Chrome on Windows; UI language varied during execution |
+| Framework         | Playwright with TypeScript                                    |
+| Automated browser | Chromium                                                      |
+| Test product      | Demo Produkt (SW10001)                                        |
+| Payment method    | Cash on delivery                                              |
 
-The base URL is overridable: `BASE_URL=https://my-local-shop.ddev.site npm test`.
+## Project Structure
 
-## Project structure
-
-```
+```text
 shopware-qa-task/
 ├── src/
 │   ├── data/
-│   │   └── testData.ts              # products, payment labels, guest factory, edge case data
+│   │   └── testData.ts
 │   ├── fixtures/
-│   │   └── pages.ts                 # page objects injected as Playwright fixtures
+│   │   └── pages.ts
 │   └── pages/
-│       ├── BasePage.ts              # cookie bar, navigation, header cart, shared assertions
+│       ├── BasePage.ts
 │       ├── HomePage.ts
 │       ├── CategoryPage.ts
 │       ├── ProductDetailPage.ts
@@ -37,85 +37,194 @@ shopware-qa-task/
 │       ├── CheckoutFinishPage.ts
 │       └── index.ts
 ├── tests/
-│   └── guest-checkout.spec.ts       # TC-P01, the only automated test
-├── screenshots/                     # manual testing evidence
+│   └── guest-checkout.spec.ts
+├── screenshots/
+│   ├── positive/
+│   ├── negative/
+│   └── edge/
 ├── Manual-Test-Plan.md
 ├── Bug-Report.md
 ├── playwright.config.ts
 ├── tsconfig.json
-└── package.json
+├── package.json
+└── package-lock.json
 ```
+
+## Prerequisites
+
+* Node.js 18 or later
+* npm
+* Internet access
 
 ## Setup
 
+Install the project dependencies:
+
 ```bash
 npm install
+```
+
+Install the Chromium browser required by Playwright:
+
+```bash
 npx playwright install chromium
 ```
 
-## Running the tests
+## Running the Automated Test
+
+Run the test in Chromium:
 
 ```bash
-npm run test:chromium      # run the single E2E test headlessly
-npm run test:headed        # run the same test with the browser visible
-npm run test:debug         # Playwright inspector
-npm test                   # run the single E2E test in Chromium
-npm run report             # open the HTML report
+npm run test:chromium
 ```
 
-Run a single case:
+Run the test with the browser visible:
+
+```bash
+npm run test:headed
+```
+
+Run the test with the Playwright Inspector:
+
+```bash
+npm run test:debug
+```
+
+Open the latest HTML report:
+
+```bash
+npm run report
+```
+
+Run the test file directly:
 
 ```bash
 npx playwright test tests/guest-checkout.spec.ts --project=chromium
 ```
 
+## Automated Test Scope
+
+The assignment requires one automated positive end-to-end test. Therefore, only TC-P01 is automated.
+
+The automated test covers the following flow:
+
+1. Open the Shopware storefront.
+2. Navigate to the Clothing category.
+3. Open Demo Produkt.
+4. Verify the product name and price.
+5. Add the product to the cart.
+6. Verify the product and quantity in the cart.
+7. Continue to checkout as a guest.
+8. Fill in customer and address information.
+9. Select Cash on delivery.
+10. Accept the Terms and Conditions.
+11. Place the order.
+12. Verify the confirmation page and order number.
+
+The negative and edge cases are documented in `Manual-Test-Plan.md` for manual execution.
+
+## Automated Test Result
+
+The automated TC-P01 guest checkout test was executed successfully in Chromium.
+
+```text
+1 passed
+0 failed
+0 flaky
+0 skipped
+```
+
+The test completed the full flow and displayed a valid order confirmation number.
+
 ## Page Object Model
 
-Every page exposes locators as readonly fields and actions as methods. Specs never touch a CSS selector, so a storefront markup change is a one-file fix.
+The project uses the Page Object Model to separate test logic from page interactions.
 
-- `BasePage` holds what every page shares: `open()`, `dismissCookieBanner()`, header search, cart badge, URL assertion. All other pages extend it.
-- Page objects assert their own "am I loaded" state (`assertLoaded()`), so a spec step fails at the page that actually broke.
-- Where Shopware renders two different widgets for the same thing (quantity as a `<select>` on small step ranges, as a number input otherwise), the page object hides that branch behind `setQuantity()`.
-- Page objects are wired as fixtures in `src/fixtures/pages.ts`, so specs declare the pages they need instead of constructing them.
+* `BasePage` contains shared page functionality.
+* `HomePage` represents the storefront homepage.
+* `CategoryPage` handles product listing interactions.
+* `ProductDetailPage` handles product details and quantity selection.
+* `OffcanvasCartPage` represents the cart side panel.
+* `CartPage` handles the full cart page.
+* `CheckoutRegisterPage` handles guest and address information.
+* `CheckoutConfirmPage` handles payment, Terms and Conditions, and order submission.
+* `CheckoutFinishPage` verifies the order confirmation and order number.
+* `pages.ts` provides the page objects as Playwright fixtures.
 
-### Selector strategy
+## Selector Strategy
 
-The demo store ships no `data-test-id` attributes, so selectors are chosen in this order:
+The demo storefront does not provide dedicated `data-testid` attributes. Selectors are therefore chosen in the following order:
 
-1. Stable IDs from the Shopware form templates: `#personalMail`, `#billingAddressAddressZipcode`, `#tos`, `#confirmFormSubmit`.
-2. Semantic/role selectors: `getByRole('link', { name })` for navigation and product links.
-3. Structural Shopware classes that are part of the storefront template contract: `.product-detail-name`, `.begin-checkout-btn`, `.finish-ordernumber`.
-4. Text filtering scoped to a container (`.payment-method` filtered by `Nachnahme`) rather than nth-child chains.
+1. Stable form IDs and input names.
+2. Accessible role and label selectors.
+3. Stable Shopware storefront classes.
+4. Text filtering scoped to a specific component.
 
-No selector in this repo depends on DOM position or on generated Bootstrap utility classes.
+The test avoids selectors that depend on DOM position, such as long `nth-child` chains.
 
-### Assertions
+## Assertions
 
-Each step asserts state, not just navigation: product name and price on the detail page, product name and quantity in the off-canvas cart, the payment radio being checked after selection, the URL of every checkout stage, and finally the order number matching `\d{3,}` plus the payment method on the confirmation page.
+Meaningful assertions are included at the major stages of the test:
 
-## Test data
+* Storefront and navigation are visible.
+* The expected product appears in the category.
+* The product name and price are correct.
+* The cart contains the expected product and quantity.
+* The guest checkout page is displayed.
+* The checkout confirmation page is reached.
+* Cash on delivery is selected.
+* The order confirmation page is displayed.
+* A numeric order number is generated.
+* The confirmation shows the selected payment method.
 
-Guest emails are generated per run (`qa.guest.<timestamp>@example.com`) so repeated runs never hit "an account with this email already exists" on the shared demo store.
+## Test Data
 
-## Scope decision
+A unique guest email is generated for every automated test execution:
 
-The assignment asks for ONE automated positive end-to-end test. Therefore only TC-P01 is automated. The negative and edge cases remain in `Manual-Test-Plan.md` for manual execution and evidence collection.
+```text
+qa.guest.<timestamp>@example.com
+```
 
-## Known limitations
+This prevents repeated executions from using the same email address on the shared demo storefront.
 
-- The tests place real orders on the shared public demo store. There is no cleanup step; on a controlled instance I would reset via the Admin API between runs.
-- Assertions on the storefront are written against the German UI labels of this instance. A different locale needs the labels in `testData.ts` swapped, not the page objects.
-- The `Nachnahme` payment method must be active in the sales channel; if it is deactivated the test fails at the payment step with a clear message rather than silently ordering with the default method.
+## Manual Testing
 
-## What I would improve with more time
+The manual test plan is available in `Manual-Test-Plan.md` and contains:
 
-- API-level setup: create the cart through the Store API and start the UI test at `/checkout/register`, so the happy path test is not paying for coverage that already exists elsewhere.
-- Visual regression snapshots on the confirm and finish pages.
-- A GitHub Actions workflow running the suite on push with the HTML report uploaded as an artifact.
-- Data-driven quantity and payment method cases instead of the single hardcoded product.
-- Accessibility checks (axe) on each checkout step.
-- Ask the team to add `data-test-id` attributes to the checkout templates and migrate the class-based selectors to them.
+* 5 positive test cases
+* 3 negative test cases
+* 2 edge cases
+
+Each test case includes an ID, title, preconditions, steps, expected result, and priority.
+
+Manual execution evidence is stored in the `screenshots` directory.
+
+## Bug Report
+
+The bug report is available in `Bug-Report.md`.
+
+The reported issue is documented as simulated, which is permitted by the assignment. It includes the environment, reproduction steps, expected and actual results, severity, and justification.
+
+## Known Limitations
+
+* The automated test creates a real order on the shared public demo storefront.
+* There is no cleanup process for orders created by automated test executions.
+* The automation depends on the labels and markup available in the current demo storefront.
+* The Cash on delivery payment method must remain available in the sales channel.
+* Changes to the shared demo environment may require updates to test data or selectors.
+
+## What I Would Improve With More Time
+
+* Add automated cleanup for orders created during test execution.
+* Run the same E2E test in Chromium, Firefox, and WebKit.
+* Add a GitHub Actions workflow and upload the Playwright report as an artifact.
+* Add visual regression checks for the checkout confirmation and finish pages.
+* Add accessibility checks to the main checkout pages.
+* Replace class-based selectors with dedicated `data-testid` attributes if they become available.
+* Create additional reusable test-data helpers.
 
 ## Reflection
 
-The most difficult part was making selectors stable on a shared storefront that does not provide dedicated test IDs, especially around the payment method and quantity widgets. The most enjoyable part was modelling the checkout as reusable page objects and adding assertions at each important transition instead of checking only the final page.
+The most difficult part was creating stable selectors for a shared storefront that does not provide dedicated test IDs, especially for the payment method and quantity controls.
+
+The most enjoyable part was organizing the checkout flow with reusable Page Objects and adding assertions at every important stage instead of checking only the final page.
