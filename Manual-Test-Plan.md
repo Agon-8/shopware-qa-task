@@ -95,6 +95,17 @@ completed using Cash on delivery, and order number 11029 was displayed.
 | 3   | Complete the guest checkout             | Confirm page total matches €30.00 plus shipping; order is placed |
 
 **Expected result:** line totals and grand total scale correctly with quantity.
+**Actual Result:**  
+The product quantity was set to 3. The cart subtotal and final order total
+were correctly updated to €30.00. The checkout was completed using Cash on
+delivery, and order number 11038 was displayed.
+
+**Status:** Passed
+
+**Evidence:**
+
+- `screenshots/positive/TC-P03-cart-quantity-3.png`
+- `screenshots/positive/TC-P03-order-confirmation.png`
 
 ---
 
