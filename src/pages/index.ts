@@ -1,0 +1,9 @@
+export { BasePage } from './BasePage';
+export { HomePage } from './HomePage';
+export { CategoryPage } from './CategoryPage';
+export { ProductDetailPage } from './ProductDetailPage';
+export { OffcanvasCartPage } from './OffcanvasCartPage';
+export { CartPage } from './CartPage';
+export { CheckoutRegisterPage } from './CheckoutRegisterPage';
+export { CheckoutConfirmPage } from './CheckoutConfirmPage';
+export { CheckoutFinishPage } from './CheckoutFinishPage';

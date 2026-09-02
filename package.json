@@ -1,0 +1,18 @@
+{
+  "name": "shopware-qa-task",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Manual test plan, bug report and Playwright POM automation for the Shopware 6 guest checkout flow.",
+  "scripts": {
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:headed": "playwright test --project=chromium --headed",
+    "test:debug": "playwright test --project=chromium --debug",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  }
+}
