@@ -123,6 +123,17 @@ delivery, and order number 11038 was displayed.
 | 3   | Continue to checkout and place the order | Confirmation page reflects quantity 2               |
 
 **Expected result:** cart recalculation is applied to the created order.
+**Actual Result:**  
+The product quantity was updated from 1 to 2 on the cart page. The cart
+total was recalculated correctly to €20.00. Checkout was completed using
+Cash on delivery, and order number 11040 displayed quantity 2.
+
+**Status:** Passed
+
+**Evidence:**
+
+- `screenshots/positive/TC-P04-cart-quantity-updated.png`
+- `screenshots/positive/TC-P04-order-confirmation.png`
 
 ---
 
