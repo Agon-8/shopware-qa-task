@@ -257,6 +257,16 @@ Checkout was not available, so the user could not continue without a product.
 | 3   | Continue to checkout                   | Totals match the quantity actually stored in the cart                                                                 |
 
 **Expected result:** quantity bounds are enforced in the cart, not only in the input widget.
+**Actual Result:**  
+When quantity 9999 was entered, the storefront rejected the value and
+displayed the validation message: "Value must be less than or equal to 100."
+The product could not be added with a quantity above the allowed maximum.
+
+**Status:** Passed (large-quantity variation)
+
+**Evidence:**
+
+- `screenshots/edge/TC-E02-large-quantity.png`
 
 ---
 
